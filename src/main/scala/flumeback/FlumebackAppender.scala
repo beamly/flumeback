@@ -5,9 +5,12 @@ import ch.qos.logback.core.AppenderBase
 import dispatch.Defaults._
 import dispatch._
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
 class FlumebackAppender extends AppenderBase[ILoggingEvent] {
   def append(le: ILoggingEvent): Unit = {
-    Http((
+    val resp = Http((
       host("localhost", 16002)
       setContentType("application/json", "UTF-8")
     ) << s"""
@@ -20,5 +23,6 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
         |}]
       """.stripMargin
     )
+    Await.result(resp, 1.minute)
   }
 }
