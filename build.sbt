@@ -12,4 +12,5 @@ lazy val root = project in file(".") settings (
         scalacOptions  += "-Yinline-warnings",
         scalacOptions  += "-Yno-adapted-args",
         scalacOptions  += "-Ywarn-value-discard",
-  libraryDependencies  += "ch.qos.logback" % "logback-classic" % "1.1.1")
+  libraryDependencies  += "ch.qos.logback"          %  "logback-classic" % "1.1.1",
+  libraryDependencies  += "net.databinder.dispatch" %% "dispatch-core"   % "0.11.1")
