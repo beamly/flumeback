@@ -7,17 +7,18 @@ import dispatch._
 
 class FlumebackAppender extends AppenderBase[ILoggingEvent] {
   def append(le: ILoggingEvent): Unit = {
-    Http {
-      host("localhost", 16002).setContentType("application/json", "UTF-8") <<
-        s"""
+    Http((
+      host("localhost", 16002)
+      setContentType("application/json", "UTF-8")
+    ) << s"""
         |[{
         |   "headers" : {
-        |              "timestamp" : "${le.getTimeStamp}",
-        |              "host" : "random_host.example.com"
+        |     "timestamp" : "${le.getTimeStamp}",
+        |     "host" : "random_host.example.com"
         |   },
         |   "body" : "${le.getFormattedMessage}"
         |}]
       """.stripMargin
-    }
+    )
   }
 }
