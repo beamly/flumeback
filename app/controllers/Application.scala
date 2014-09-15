@@ -10,6 +10,8 @@ object Application extends Controller {
   }
 
   def datetime = Action {
-    Ok(new DateTime().toString())
+    val dateTimeStr = new DateTime() toString()
+    Logger info s"The time is now: $dateTimeStr"
+    Ok(dateTimeStr)
   }
 }
