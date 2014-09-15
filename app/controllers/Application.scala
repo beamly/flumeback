@@ -14,4 +14,9 @@ object Application extends Controller {
     Logger info s"The time is now: $dateTimeStr"
     Ok(dateTimeStr)
   }
+
+  def boom = Action {
+    Logger.info(s"Computer go BOOM!", new Exception)
+    Ok("BOOM!")
+  }
 }
