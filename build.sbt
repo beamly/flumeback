@@ -5,7 +5,6 @@ lazy val root = project in file(".") settings (
              licenses  := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
          scalaVersion  := "2.11.2",
    crossScalaVersions  := Seq(scalaVersion.value, "2.10.4"),
-        scalacOptions  += "-deprecation",
         scalacOptions ++= Seq("-encoding", "utf8"),
         scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
         scalacOptions  += "-optimize",
