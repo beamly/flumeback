@@ -5,7 +5,6 @@ lazy val root = (
                    name  := "flumeback-scratch",
                 version  := "0.1-SNAPSHOT",
            scalaVersion  := "2.11.2",
-          scalacOptions  += "-deprecation",
           scalacOptions ++= Seq("-encoding", "utf8"),
           scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
           scalacOptions  += "-optimize",
