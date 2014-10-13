@@ -38,6 +38,7 @@ lazy val root = (
         } getOrElse          v.bumpMinor.copy(bugfix = None).asSnapshot.string
       } getOrElse versionFormatError
     },
+                crossBuild := true,
              pgpPublicRing := Path.userHome / ".gnupg" / "beamly-pubring.gpg",
              pgpSecretRing := Path.userHome / ".gnupg" / "beamly-secring.gpg",
     publishArtifactsAction := PgpKeys.publishSigned.value,
