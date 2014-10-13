@@ -44,7 +44,9 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
   def append(le: ILoggingEvent): Unit = {
     val message = le.getFormattedMessage
     val stackStr = throwableProxyConverter.convert(le)
-    val body = message + CoreConstants.LINE_SEPARATOR + stackStr
+    val body =
+      if (stackStr == "") message
+      else                message + CoreConstants.LINE_SEPARATOR + stackStr
 
     val headers = Map(
       "timestamp" -> le.getTimeStamp.toString,
