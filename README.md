@@ -6,6 +6,8 @@ Developed to configure our Play apps to log to our Flume setup.
 
 [![Build Status](https://travis-ci.org/beamly/flumeback.svg?branch=master)](https://travis-ci.org/beamly/flumeback)
 
+[Scaladoc](http://beamly.github.io/flumeback/latest/api)
+
 ## How to Use
 
 #### Add flumeback to your build system.
