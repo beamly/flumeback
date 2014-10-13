@@ -1,10 +1,10 @@
-# Flumeback - NOT YET PUBLISHED
+# Flumeback
 
 A logback appender for Apache Flume, currently logs using HTTP/JSON.
 
 Developed to configure our Play apps to log to our Flume setup.
 
-## How to Use (NOTE: build it yourself for now)
+## How to Use
 
 #### Add flumeback to your build system.
 
