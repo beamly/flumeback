@@ -24,13 +24,15 @@ lazy val root = (
   settings (typelevelDefaultSettings: _*)
   settings (typelevelBuildInfoSettings: _*)
   settings (
-    githubProject := ("beamly", "flumeback"),
-       githubDevs := Seq(Developer("Dale Wijnand", "dwijnand"), Developer("Ali Asad Lotia", "lotia")),
-       crossBuild := true,
-    pgpPublicRing := Path.userHome / ".gnupg" / "beamly-pubring.gpg",
-    pgpSecretRing := Path.userHome / ".gnupg" / "beamly-secring.gpg",
-      profileName := "com.beamly")
-  settings (site.settings: _*) settings (site.includeScaladoc(): _*)
+      githubProject := ("beamly", "flumeback"),
+         githubDevs := Seq(Developer("Dale Wijnand", "dwijnand"), Developer("Ali Asad Lotia", "lotia")),
+         crossBuild := true,
+      pgpPublicRing := Path.userHome / ".gnupg" / "beamly-pubring.gpg",
+      pgpSecretRing := Path.userHome / ".gnupg" / "beamly-secring.gpg",
+        profileName := "com.beamly",
+             apiURL := Some(url("http://beamly.github.io/flumeback/latest/api/")),
+    autoAPIMappings := true)
+    settings (site.settings: _*) settings (site.includeScaladoc(): _*)
   settings (ghpages.settings: _*)
   settings (git.remoteRepo := "git@github.com:beamly/flumeback.git")
 )
