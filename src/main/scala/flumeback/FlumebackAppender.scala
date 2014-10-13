@@ -59,12 +59,11 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
     val resp = http((
       dispatch.host(host, port)
       setContentType("application/json", "UTF-8")
-    ) << s"""
-        |[{
+    ) << s"""[{
         |   "headers" : $headersStr,
         |   "body" : "$body"
         |}]
-      """.stripMargin
+        |""".stripMargin
     )
 
     Await.result(resp, await)
