@@ -36,6 +36,11 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
     }
   }
 
+  override def stop(): Unit = {
+    super.stop()
+    http.client.close()
+  }
+
   def append(le: ILoggingEvent): Unit = {
     val message = le.getFormattedMessage
     val stackStr = throwableProxyConverter.convert(le)
