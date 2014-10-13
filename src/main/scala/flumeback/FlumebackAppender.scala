@@ -60,5 +60,6 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
     )
 
     Await.result(resp, await)
+    ()
   }
 }
