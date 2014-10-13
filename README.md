@@ -4,6 +4,8 @@ A logback appender for Apache Flume, currently logs using HTTP/JSON.
 
 Developed to configure our Play apps to log to our Flume setup.
 
+[![Build Status](https://travis-ci.org/beamly/flumeback.svg?branch=master)](https://travis-ci.org/beamly/flumeback)
+
 ## How to Use
 
 #### Add flumeback to your build system.
