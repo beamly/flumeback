@@ -21,7 +21,8 @@ lazy val root = (
           scalacOptions  += "-Ywarn-value-discard",
     libraryDependencies  += "ch.qos.logback"          %  "logback-classic"        % "1.1.2",
     libraryDependencies  += "net.databinder.dispatch" %% "dispatch-core"          % "0.11.1",
-    libraryDependencies  += "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.11.1")
+    libraryDependencies  += "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.11.1",
+    libraryDependencies  += "org.specs2"              %% "specs2"                 % "2.4.2" % "test")
   settings (typelevelDefaultSettings: _*)
   settings (typelevelBuildInfoSettings: _*)
   settings (
