@@ -58,5 +58,6 @@ lazy val root = (
           <name>Ali Asad Lotia</name>
           <url>https://github.com/lotia</url>
         </developer>
-      </developers>)
+      </developers>,
+    profileName := "com.beamly")
 )
