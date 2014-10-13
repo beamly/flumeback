@@ -30,7 +30,7 @@ lazy val root = (
     pgpPublicRing := Path.userHome / ".gnupg" / "beamly-pubring.gpg",
     pgpSecretRing := Path.userHome / ".gnupg" / "beamly-secring.gpg",
       profileName := "com.beamly")
-  settings (site.settings: _*)
+  settings (site.settings: _*) settings (site.includeScaladoc(): _*)
   settings (ghpages.settings: _*)
   settings (git.remoteRepo := "git@github.com:beamly/flumeback.git")
 )
