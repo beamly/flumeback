@@ -38,3 +38,5 @@ lazy val root = (
   settings (ghpages.settings: _*)
   settings (git.remoteRepo := "git@github.com:beamly/flumeback.git")
 )
+
+lastRelease in ThisBuild := Relative(0, Final)
