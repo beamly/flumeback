@@ -22,6 +22,7 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
   @BeanProperty var timeout = "1 second"
 
   private var await: Duration = 1.second
+  private[flumeback] var http: Http = Http
 
   override def start(): Unit = {
     throwableProxyConverter.start()
@@ -48,7 +49,7 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
     ) ++ le.getMDCPropertyMap.asScala.toMap
     val headersStr = compact(render(headers))
 
-    val resp = Http((
+    val resp = http((
       dispatch.host(host, port)
       setContentType("application/json", "UTF-8")
     ) << s"""
