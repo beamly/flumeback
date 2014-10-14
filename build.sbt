@@ -1,6 +1,6 @@
 import SonatypeKeys._
 import TypelevelKeys._
-import org.typelevel.sbt.Developer
+import org.typelevel.sbt.Developer, org.typelevel.sbt.Version._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
 
 lazy val root = (
