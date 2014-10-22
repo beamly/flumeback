@@ -14,7 +14,6 @@ lazy val root = (
      crossScalaVersions  := Seq(scalaVersion.value, "2.10.4"),
           scalacOptions ++= Seq("-encoding", "utf8"),
           scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
-          scalacOptions  += "-optimize",
           scalacOptions  += "-Xfatal-warnings",
           scalacOptions  += "-Yinline-warnings",
           scalacOptions  += "-Yno-adapted-args",
