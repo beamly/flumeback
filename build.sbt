@@ -7,7 +7,6 @@ lazy val root = (
            scalaVersion  := "2.11.2",
           scalacOptions ++= Seq("-encoding", "utf8"),
           scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
-          scalacOptions  += "-optimize",
           scalacOptions  += "-Yinline-warnings",
           scalacOptions  += "-Yno-adapted-args",
           scalacOptions  += "-Ywarn-value-discard",
