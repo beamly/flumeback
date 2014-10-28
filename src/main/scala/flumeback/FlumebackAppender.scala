@@ -1,6 +1,6 @@
 package flumeback
 
-import ch.qos.logback.classic.pattern.ThrowableProxyConverter
+import ch.qos.logback.classic.pattern.{ThrowableHandlingConverter, ThrowableProxyConverter}
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.{AppenderBase, CoreConstants}
 import dispatch._
@@ -13,10 +13,9 @@ import scala.concurrent.ExecutionContext
 import scala.util.control.NonFatal
 
 class FlumebackAppender extends AppenderBase[ILoggingEvent] {
-  val throwableProxyConverter = new ThrowableProxyConverter
-
   @BeanProperty var host = "localhost"
   @BeanProperty var port = 16311
+  var throwableHandlingConverter: ThrowableHandlingConverter = new ThrowableProxyConverter
   implicit var executor = ExecutionContext.global
 
   private[flumeback] var http: Http = Http
@@ -25,19 +24,19 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
   private var exceptionCount = 0
 
   override def start(): Unit = {
-    throwableProxyConverter.start()
+    throwableHandlingConverter.start()
     super.start()
   }
 
   override def stop(): Unit = {
     super.stop()
     http.shutdown()
-    throwableProxyConverter.stop()
+    throwableHandlingConverter.stop()
   }
 
   def append(le: ILoggingEvent): Unit = {
     val message = le.getFormattedMessage
-    val stackStr = throwableProxyConverter convert le
+    val stackStr = throwableHandlingConverter convert le
     val fullMessage =
       if (stackStr == "") message
       else                message + CoreConstants.LINE_SEPARATOR + stackStr
