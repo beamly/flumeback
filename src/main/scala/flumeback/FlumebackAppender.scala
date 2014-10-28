@@ -3,13 +3,13 @@ package flumeback
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.{AppenderBase, CoreConstants}
-import dispatch.Defaults._
 import dispatch._
 import org.json4s.JsonDSL._
 import org.json4s.native.JsonMethods._
 
 import scala.beans.BeanProperty
 import scala.collection.JavaConverters._
+import scala.concurrent.ExecutionContext
 import scala.util.control.NonFatal
 
 class FlumebackAppender extends AppenderBase[ILoggingEvent] {
@@ -17,6 +17,7 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
 
   @BeanProperty var host = "localhost"
   @BeanProperty var port = 16311
+  implicit var executor = ExecutionContext.global
 
   private[flumeback] var http: Http = Http
 
