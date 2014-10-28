@@ -43,8 +43,8 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
 
   def append(le: ILoggingEvent): Unit = {
     val message = le.getFormattedMessage
-    val stackStr = throwableProxyConverter.convert(le)
-    val body =
+    val stackStr = throwableProxyConverter convert le
+    val fullMessage =
       if (stackStr == "") message
       else                message + CoreConstants.LINE_SEPARATOR + stackStr
 
@@ -56,16 +56,19 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
     ) ++ le.getMDCPropertyMap.asScala.toMap
     val headersStr = compact(render(headers))
 
-    val resp = http((
-      dispatch.host(host, port)
-      setContentType("application/json", "UTF-8")
-    ) << s"""[{
-        |   "headers" : $headersStr,
-        |   "body" : "$body"
+    val body = s"""[{
+        |  "headers" : $headersStr,
+        |  "body" : "$fullMessage"
         |}]
         |""".stripMargin
+
+    val req = (dispatch
+      .host(host, port)
+      .setContentType("application/json", "UTF-8")
+      << body
     )
 
+    val resp = http(req)
     Await.result(resp, await)
     ()
   }

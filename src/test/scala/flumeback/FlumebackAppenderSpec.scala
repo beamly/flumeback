@@ -17,24 +17,22 @@ class FlumebackAppenderSpec extends Specification {
     "send properly formatted json" in {
       val ref = new AtomicReference[Request]()
       val flumebackAppender = new FlumebackAppender
-      val http = Http(FakeAsyncHttpClient(ref))
-      flumebackAppender.http = http
+      flumebackAppender.http = Http(FakeAsyncHttpClient(ref))
       flumebackAppender.start()
 
       val now = System.currentTimeMillis()
       val loggerName = s"TestClass@$now"
-      val logger = LoggerFactory.getLogger(loggerName).asInstanceOf[Logger]
+      val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
 
       val le = new LoggingEvent("TestClass", logger, Level.INFO, "Hi", /*throwable = */null, /*argArray = */null)
-      le.setTimeStamp(now)
+      le setTimeStamp now
 
-      flumebackAppender.doAppend(le)
+      flumebackAppender doAppend le
 
-      val request = ref.get()
-      request.getStringData ====
+      ref.get().getStringData ====
         s"""[{
-          |   "headers" : {"timestamp":"$now","level":"INFO","threadId":"specs2.DefaultExecutionStrategy-1","source":"$loggerName"},
-          |   "body" : "Hi"
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"specs2.DefaultExecutionStrategy-1","source":"$loggerName"},
+          |  "body" : "Hi"
           |}]
           |""".stripMargin
     }
@@ -43,7 +41,7 @@ class FlumebackAppenderSpec extends Specification {
 
 case class FakeAsyncHttpClient(ref: AtomicReference[Request]) extends AsyncHttpClient {
   override def executeRequest[T](request: Request, handler: AsyncHandler[T]): ListenableFuture[T] = {
-    ref.set(request)
+    ref set request
     new JDKFuture[T](FakeAsyncHandler(), 0, FakeHttpURLConnection())
   }
 }
