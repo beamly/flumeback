@@ -14,7 +14,7 @@ Developed to configure our Play apps to log to our Flume setup.
 
 For _sbt_:
 
-```"com.beamly.flumeback" %% "flumeback" % "0.1.0"```
+```"com.beamly.flumeback" %% "flumeback" % "0.1.3"```
 
 For _maven_:
 
@@ -22,7 +22,7 @@ For _maven_:
 <dependency>
   <groupId>com.beamly.flumeback</groupId>
   <artifactId>flumeback_${scala.binary}</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.3</version>
 </dependency>
 ```
 (where `scala.binary` is defined somewhere as `2.11` or `2.10`)
@@ -42,7 +42,6 @@ with its defaults:
 <appender name="FLUMEBACK" class="flumeback.FlumebackAppender">
   <host>localhost</host>
   <port>16311</port>
-  <timeout>1 second</timeout>
 </appender>
 ```
 
