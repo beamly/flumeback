@@ -38,7 +38,8 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
 
   override def stop(): Unit = {
     super.stop()
-    http.client.close()
+    http.shutdown()
+    throwableProxyConverter.stop()
   }
 
   def append(le: ILoggingEvent): Unit = {
