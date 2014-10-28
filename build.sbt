@@ -10,5 +10,5 @@ lazy val root = (
           scalacOptions  += "-Yinline-warnings",
           scalacOptions  += "-Yno-adapted-args",
           scalacOptions  += "-Ywarn-value-discard",
-    libraryDependencies  += "com.beamly.flumeback" %% "flumeback" % "0.1-SNAPSHOT")
+    libraryDependencies  += "com.beamly.flumeback" %% "flumeback" % "0.1.3")
 )
