@@ -1,6 +1,6 @@
 # Flumeback
 
-[![Latest Version](http://img.shields.io/maven-central/v/com.beamly.flumeback/flumeback_2.11.svg)](http://search.maven.org/#search|ga|1|a:"flumeback_2.11")
+[![Latest Version](https://maven-badges.herokuapp.com/maven-central/com.beamly.flumeback/flumeback_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.beamly.flumeback/flumeback_2.11)
 [![License](http://img.shields.io/:license-Apache%202-red.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt) 
 [![Scaladoc](http://img.shields.io/:docs-Scaladoc-orange.svg)](http://beamly.github.io/flumeback/latest/api)
 
