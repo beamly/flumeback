@@ -5,7 +5,7 @@
 [![Scaladoc](http://img.shields.io/:docs-Scaladoc-orange.svg)](http://beamly.github.io/flumeback/latest/api)
 
 [![Build Status](https://travis-ci.org/beamly/flumeback.svg?branch=master)](https://travis-ci.org/beamly/flumeback)
-[![Dependency Status](https://www.versioneye.com/user/projects/54534f3730a8fef29200000a/badge.svg)](http://github.com/beamly/flumeback)
+[![Dependency Status](https://www.versioneye.com/user/projects/54534f3730a8fef29200000a/badge.svg)](https://www.versioneye.com/user/projects/54534f3730a8fef29200000a)
 [![Repo Size](https://reposs.herokuapp.com/?path=beamly/flumeback)](http://github.com/beamly/flumeback)
 
 A logback appender for Apache Flume, currently logs using HTTP/JSON.
