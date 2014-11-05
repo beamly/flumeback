@@ -55,3 +55,4 @@ Dependencies
 * Scala 2.11.x or 2.10.x
 * Logback 1.1.x
 * Dispatch 0.11.x
+test
