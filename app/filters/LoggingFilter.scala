@@ -7,7 +7,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 
 object LoggingFilter extends EssentialFilter {
-  val log = LoggerFactory.getLogger("HttpAccessLogger")
+  val log = LoggerFactory getLogger "HttpAccessLogger"
   val dateTimeFmt = ISODateTimeFormat.dateTime()
 
   def apply(nextFilter: EssentialAction) = new EssentialAction {
@@ -17,7 +17,7 @@ object LoggingFilter extends EssentialFilter {
         val endTime = DateTime now DateTimeZone.UTC
         val requestTime = endTime.getMillis - startTime.getMillis
 
-        val startTimeStr = startTime.toString(dateTimeFmt)
+        val startTimeStr = startTime toString dateTimeFmt
         val httpMethodStr = requestHeader.method.padTo(4, " ").mkString
         val resultStatusCode = result.header.status
         val requestTimeStr = (requestTime + "ms").padTo(6, " ").mkString
