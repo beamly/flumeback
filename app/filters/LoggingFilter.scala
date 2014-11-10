@@ -1,8 +1,8 @@
 package filters
 
-import org.joda.time.{DateTime, DateTimeZone}
 import org.joda.time.format.ISODateTimeFormat
-import org.slf4j.{MDC, LoggerFactory}
+import org.joda.time.{DateTime, DateTimeZone}
+import org.slf4j.LoggerFactory
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 
