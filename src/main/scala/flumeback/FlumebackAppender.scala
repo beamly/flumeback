@@ -14,7 +14,7 @@ import scala.util.control.NonFatal
 
 class FlumebackAppender extends AppenderBase[ILoggingEvent] {
   @BeanProperty var host = "localhost"
-  @BeanProperty var port = 16311
+  @BeanProperty var port = 16301
   var throwableHandlingConverter: ThrowableHandlingConverter = new ThrowableProxyConverter
   implicit var executor = ExecutionContext.global
 

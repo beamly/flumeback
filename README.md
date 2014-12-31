@@ -45,7 +45,7 @@ with its defaults:
 ```xml
 <appender name="FLUMEBACK" class="flumeback.FlumebackAppender">
   <host>localhost</host>
-  <port>16311</port>
+  <port>16301</port>
 </appender>
 ```
 
