@@ -9,7 +9,6 @@ import xerial.sbt.Sonatype._
 
 import TypelevelKeys._
 import org.typelevel.sbt.Developer
-import org.typelevel.sbt.Version._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
 import SonatypeKeys._
 
@@ -21,7 +20,6 @@ object Build extends Build {
     settings (
       organization := "com.beamly.flumeback",
       name := "flumeback",
-      lastRelease in ThisBuild := Relative(0, Final),
 
       description := "A Logback appender for Flume",
       homepage := Some(url(s"https://github.com/$repoUser/$repoProj")),
