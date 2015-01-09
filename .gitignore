@@ -1,0 +1,8 @@
+# Intellij project dir
+.idea/
+
+# sbt project subdir
+project/project/
+
+# build artifacts shouldn't be tracked
+target/
