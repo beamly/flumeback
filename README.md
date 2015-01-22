@@ -18,7 +18,7 @@ Developed to configure our Play apps to log to our Flume setup.
 
 For _sbt_:
 
-```"com.beamly.flumeback" %% "flumeback" % "0.2.0"```
+```"com.beamly.flumeback" %% "flumeback" % "0.2.1"```
 
 For _maven_:
 
@@ -26,7 +26,7 @@ For _maven_:
 <dependency>
   <groupId>com.beamly.flumeback</groupId>
   <artifactId>flumeback_${scala.binary}</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
 </dependency>
 ```
 (where `scala.binary` is defined somewhere as `2.11` or `2.10`)
