@@ -14,15 +14,18 @@ import java.util.concurrent.atomic.AtomicReference
 
 class FlumebackAppenderSpec extends Specification {
   "The FlumebackAppender" should {
+
+
+    val now = System.currentTimeMillis()
+    val loggerName = s"TestClass@$now"
+    val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
+
+
     "send properly formatted json" in {
       val ref = new AtomicReference[Request]()
       val flumebackAppender = new FlumebackAppender
       flumebackAppender.http = Http(FakeAsyncHttpClient(ref))
       flumebackAppender.start()
-
-      val now = System.currentTimeMillis()
-      val loggerName = s"TestClass@$now"
-      val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
 
       val le = new LoggingEvent("TestClass", logger, Level.INFO, "Hi", /*throwable = */null, /*argArray = */null)
       le setTimeStamp now
@@ -31,8 +34,27 @@ class FlumebackAppenderSpec extends Specification {
 
       ref.get().getStringData ====
         s"""[{
-          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"specs2.DefaultExecutionStrategy-1","source":"$loggerName"},
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName()}","source":"$loggerName"},
           |  "body" : "Hi"
+          |}]
+          |""".stripMargin
+    }
+
+    "escape log messages when constructing the json payload" in {
+      val ref = new AtomicReference[Request]()
+      val flumebackAppender = new FlumebackAppender
+      flumebackAppender.http = Http(FakeAsyncHttpClient(ref))
+      flumebackAppender.start()
+
+      val le = new LoggingEvent("TestClass", logger, Level.INFO, """{"test":"someValue"}""", /*throwable = */null, /*argArray = */null)
+      le setTimeStamp now
+
+      flumebackAppender doAppend le
+
+      ref.get().getStringData ====
+        s"""[{
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName()}","source":"$loggerName"},
+          |  "body" : "{\\"test\\":\\"someValue\\"}"
           |}]
           |""".stripMargin
     }

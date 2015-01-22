@@ -51,7 +51,7 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
 
     val body = s"""[{
         |  "headers" : $headersStr,
-        |  "body" : "$fullMessage"
+        |  "body" : "${fullMessage.replace("\"", "\\\"")}"
         |}]
         |""".stripMargin
 
