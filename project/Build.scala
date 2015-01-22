@@ -27,7 +27,7 @@ object Build extends Build {
     startYear := Some(2014),
     licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
 
-    scalaVersion := "2.11.4",
+    scalaVersion := "2.11.5",
     crossScalaVersions := Seq(scalaVersion.value, "2.10.4"),
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
