@@ -7,6 +7,8 @@ import com.ning.http.client._
 import com.ning.http.client.providers.jdk.JDKFuture
 import dispatch.Http
 import org.slf4j.LoggerFactory
+import org.json4s._
+import org.json4s.native.JsonMethods._
 import org.specs2.execute.{AsResult, Result}
 import org.specs2.mutable.Specification
 import org.specs2.specification.FixtureExample
@@ -36,7 +38,8 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
     "escape log messages when constructing the json payload" in { c: Context =>
       import c._
 
-      val le = new LoggingEvent("TestClass", logger, Level.INFO, """{"a":"b\c"}""", /*throwable = */null, /*argArray = */null)
+      val msg = """{"a":"b\c"}"""
+      val le = new LoggingEvent("TestClass", logger, Level.INFO, msg, /*throwable = */null, /*argArray = */null)
       le setTimeStamp now
 
       flumebackAppender doAppend le
@@ -47,6 +50,10 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
           |  "body" : "{\\"a\\":\\"b\\\\c\\"}"
           |}]
           |""".stripMargin
+
+      parse(req.get().getStringData) must beLike {
+        case JArray(List(JObject(List(_, ("body", JString(body)))))) => body ==== msg
+      }
     }
   }
 }
