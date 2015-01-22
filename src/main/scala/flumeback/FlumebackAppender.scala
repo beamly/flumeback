@@ -5,6 +5,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.{AppenderBase, CoreConstants}
 import dispatch._
 import org.json4s.JsonDSL._
+import org.json4s.ParserUtil
 import org.json4s.native.JsonMethods._
 
 import scala.beans.BeanProperty
@@ -51,7 +52,7 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
 
     val body = s"""[{
         |  "headers" : $headersStr,
-        |  "body" : "${fullMessage.replace("\"", "\\\"")}"
+        |  "body" : "${ParserUtil quote fullMessage}"
         |}]
         |""".stripMargin
 
