@@ -34,7 +34,7 @@ class FlumebackAppenderSpec extends Specification {
 
       ref.get().getStringData ====
         s"""[{
-          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName()}","source":"$loggerName"},
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName}","source":"$loggerName"},
           |  "body" : "Hi"
           |}]
           |""".stripMargin
@@ -53,7 +53,7 @@ class FlumebackAppenderSpec extends Specification {
 
       ref.get().getStringData ====
         s"""[{
-          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName()}","source":"$loggerName"},
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName}","source":"$loggerName"},
           |  "body" : "{\\"test\\":\\"someValue\\"}"
           |}]
           |""".stripMargin
