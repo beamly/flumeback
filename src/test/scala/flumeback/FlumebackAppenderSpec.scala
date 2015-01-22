@@ -7,57 +7,66 @@ import com.ning.http.client._
 import com.ning.http.client.providers.jdk.JDKFuture
 import dispatch.Http
 import org.slf4j.LoggerFactory
+import org.specs2.execute.{AsResult, Result}
 import org.specs2.mutable.Specification
+import org.specs2.specification.FixtureExample
 
 import java.net.{HttpURLConnection, URL}
 import java.util.concurrent.atomic.AtomicReference
 
-class FlumebackAppenderSpec extends Specification {
+class FlumebackAppenderSpec extends Specification with ContextFixture {
   "The FlumebackAppender" should {
 
-
-    val now = System.currentTimeMillis()
-    val loggerName = s"TestClass@$now"
-    val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
-
-
-    "send properly formatted json" in {
-      val ref = new AtomicReference[Request]()
-      val flumebackAppender = new FlumebackAppender
-      flumebackAppender.http = Http(FakeAsyncHttpClient(ref))
-      flumebackAppender.start()
+    "send properly formatted json" in { c: Context =>
+      import c._
 
       val le = new LoggingEvent("TestClass", logger, Level.INFO, "Hi", /*throwable = */null, /*argArray = */null)
       le setTimeStamp now
 
       flumebackAppender doAppend le
 
-      ref.get().getStringData ====
+      req.get().getStringData ====
         s"""[{
-          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName}","source":"$loggerName"},
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"$currentThreadName","source":"$loggerName"},
           |  "body" : "Hi"
           |}]
           |""".stripMargin
     }
 
-    "escape log messages when constructing the json payload" in {
-      val ref = new AtomicReference[Request]()
-      val flumebackAppender = new FlumebackAppender
-      flumebackAppender.http = Http(FakeAsyncHttpClient(ref))
-      flumebackAppender.start()
+    "escape log messages when constructing the json payload" in { c: Context =>
+      import c._
 
       val le = new LoggingEvent("TestClass", logger, Level.INFO, """{"test":"someValue"}""", /*throwable = */null, /*argArray = */null)
       le setTimeStamp now
 
       flumebackAppender doAppend le
 
-      ref.get().getStringData ====
+      req.get().getStringData ====
         s"""[{
-          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"${Thread.currentThread.getName}","source":"$loggerName"},
+          |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"$currentThreadName","source":"$loggerName"},
           |  "body" : "{\\"test\\":\\"someValue\\"}"
           |}]
           |""".stripMargin
     }
+  }
+}
+
+case class Context(flumebackAppender: FlumebackAppender, req: AtomicReference[Request]) {
+  val now = System.currentTimeMillis()
+  val loggerName = s"TestClass@$now"
+  val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
+  val currentThreadName = Thread.currentThread.getName
+}
+
+trait ContextFixture extends FixtureExample[Context] {
+  protected def fixture[R: AsResult](f: (Context) => R): Result = {
+    val req = new AtomicReference[Request]()
+    val flumebackAppender = new FlumebackAppender
+    flumebackAppender.http = Http(FakeAsyncHttpClient(req))
+    flumebackAppender.start()
+
+    try     AsResult(f(Context(flumebackAppender, req)))
+    finally flumebackAppender.stop()
   }
 }
 
