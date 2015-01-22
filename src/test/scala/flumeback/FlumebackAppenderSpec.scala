@@ -36,7 +36,7 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
     "escape log messages when constructing the json payload" in { c: Context =>
       import c._
 
-      val le = new LoggingEvent("TestClass", logger, Level.INFO, """{"test":"someValue"}""", /*throwable = */null, /*argArray = */null)
+      val le = new LoggingEvent("TestClass", logger, Level.INFO, """{"a":"b\c"}""", /*throwable = */null, /*argArray = */null)
       le setTimeStamp now
 
       flumebackAppender doAppend le
@@ -44,7 +44,7 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
       req.get().getStringData ====
         s"""[{
           |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"$currentThreadName","source":"$loggerName"},
-          |  "body" : "{\\"test\\":\\"someValue\\"}"
+          |  "body" : "{\\"a\\":\\"b\\\\c\\"}"
           |}]
           |""".stripMargin
     }
