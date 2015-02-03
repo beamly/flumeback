@@ -17,11 +17,11 @@ object LoggingFilter extends EssentialFilter {
         val endTime = DateTime now DateTimeZone.UTC
         val requestTime = endTime.getMillis - startTime.getMillis
 
-        val startTimeStr = startTime toString dateTimeFmt
-        val httpMethodStr = requestHeader.method.padTo(4, " ").mkString
+        val startTimeStr     = startTime toString dateTimeFmt
+        val httpMethodStr    = requestHeader.method.padTo(4, " ").mkString
         val resultStatusCode = result.header.status
-        val requestTimeStr = (requestTime + "ms").padTo(6, " ").mkString
-        val requestUri = requestHeader.uri
+        val requestTimeStr   = (requestTime + "ms").padTo(6, " ").mkString
+        val requestUri       = requestHeader.uri
 
         log info s"$startTimeStr  $httpMethodStr $resultStatusCode  $requestTimeStr $requestUri"
 

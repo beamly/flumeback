@@ -15,8 +15,7 @@
     </encoder>
   </appender>
 
-  <appender name="FLUMEBACK" class="flumeback.FlumebackAppender">
-  </appender>
+  <appender name="FLUMEBACK" class="flumeback.FlumebackAppender" />
 
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
