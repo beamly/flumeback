@@ -70,7 +70,5 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
           addError("Appender [" + name + "] failed to append.", e)
         exceptionCount += 1
     }
-
-    ()
   }
 }
