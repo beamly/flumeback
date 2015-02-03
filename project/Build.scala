@@ -15,6 +15,35 @@ import sbtrelease.ReleasePlugin.ReleaseKeys._
 import scala.language.implicitConversions
 
 object Build extends Build {
+  def scalaPartV = Def setting (CrossVersion partialVersion scalaVersion.value)
+
+  implicit final class AnyWithIfScala11Plus[A](val _o: A) {
+    def ifScala211Plus = Def setting (scalaPartV.value collect { case (2, y) if y >= 11 => _o })
+  }
+
+  implicit final class ProjectWithAlso(val _p: Project) {
+    def also(ss: Seq[Setting[_]]) = _p settings (ss.toSeq: _*)
+
+    def smartSettings(sds: SettingsDefinition*) = _p also SmartSettings(sds: _*)
+  }
+
+  implicit final class SettingKeyWithRemove[A](val _sk: SettingKey[Seq[A]]) {
+    def -=[E](e: E)(implicit r: Removable[A, E]): Setting[Seq[A]] = _sk ~= r(e)
+  }
+  implicit final class DefinableTaskWithRemove[A](val _sk: DefinableTask[Seq[A]]) {
+    def -=[E](e: E)(implicit r: Removable[A, E]): Setting[Task[Seq[A]]] = _sk ~= r(e)
+  }
+
+  def SmartSettings(sds: SettingsDefinition*): Seq[Setting[_]] = sds flatMap (_.settings)
+
+  sealed trait Removable[T, E] extends (E => Seq[T] => Seq[T])
+  implicit def RemovableElem[T] = new Removable[T, T] {
+    def apply(o: T): Seq[T] => Seq[T] = _ filterNot o.==
+  }
+  implicit def RemovablePred[T, E <: T => Boolean] = new Removable[T, E] {
+    def apply(p: E): Seq[T] => Seq[T] = _ filterNot p
+  }
+
   val repoUser = "beamly"
   val repoProj = "flumeback"
 
@@ -29,6 +58,7 @@ object Build extends Build {
 
     scalaVersion := "2.11.5",
     crossScalaVersions := Seq(scalaVersion.value, "2.10.4"),
+
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
     scalacOptions  += "-Xfatal-warnings",
@@ -68,31 +98,4 @@ object Build extends Build {
 
     watchSources ++= (baseDirectory.value * "*.sbt").get,
     watchSources ++= (baseDirectory.value / "project" * "*.scala").get)
-
-  def scalaPartV = Def setting (CrossVersion partialVersion scalaVersion.value)
-
-  implicit final class AnyWithIfScala11Plus[A](val _o: A) {
-    def ifScala211Plus = Def setting (scalaPartV.value collect { case (2, y) if y >= 11 => _o })
-  }
-
-  implicit final class ProjectWithAlso(val _p: Project) {
-    def also(ss: Seq[Setting[_]]) = _p settings (ss.toSeq: _*)
-
-    def smartSettings(sls: SettingLine*) = _p also SmartSettings(sls: _*)
-  }
-
-  implicit final class SettingKeyWithRemove[A](val _sk: SettingKey[Seq[A]]) {
-    def ~-=(p: A => Boolean): Setting[Seq[A]] = _sk ~= (_ filterNot p)
-    def -=(a: A): Setting[Seq[A]] = _sk ~= (_ filterNot a.==)
-  }
-  implicit final class DefinableTaskWithRemove[A](val _sk: DefinableTask[Seq[A]]) {
-    def ~-=(p: A => Boolean): Setting[Task[Seq[A]]] = _sk ~= (_ filterNot p)
-    def -=(a: A): Setting[Task[Seq[A]]] = _sk ~= (_ filterNot a.==)
-  }
-
-  def SmartSettings(sls: SettingLine*): Seq[Setting[_]] = sls flatMap (_.ss)
-
-  sealed trait SettingLine {def ss: Seq[Setting[_]] }
-  implicit final class SingleSetting(val s: Setting[_]) extends SettingLine {val ss = Seq[Setting[_]](s) }
-  implicit final class MultiSettings(val ss: Seq[Setting[_]]) extends SettingLine
 }
