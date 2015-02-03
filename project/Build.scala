@@ -47,14 +47,8 @@ object Build extends Build {
   val repoUser = "beamly"
   val repoProj = "flumeback"
 
-  val flumeback = project in file(".") smartSettings (
+  val commonSettings = Seq[Setting[_]](
     organization := "com.beamly.flumeback",
-    name := "flumeback",
-
-    description := "A Logback appender for Flume",
-    homepage := Some(url(s"https://github.com/$repoUser/$repoProj")),
-    startYear := Some(2014),
-    licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
 
     scalaVersion := "2.11.5",
     crossScalaVersions := Seq(scalaVersion.value, "2.10.4"),
@@ -68,7 +62,30 @@ object Build extends Build {
     scalacOptions  += "-Ywarn-dead-code",
     scalacOptions  += "-Ywarn-numeric-widen",
     scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq,
-    scalacOptions  += "-Ywarn-value-discard",
+    scalacOptions  += "-Ywarn-value-discard"
+  )
+
+  val noArtifacts = Seq[Setting[_]](
+    publish := (()),
+    publishLocal := (()),
+    publishArtifact := false, // TODO: Not necessary?
+    Keys.`package` := file(""),
+    packageBin := file(""),
+    packagedArtifacts := Map()
+  )
+
+  val `flumeback-proj` = project in file(".") smartSettings (
+    commonSettings,
+    noArtifacts
+  )
+
+  val flumeback = project in file("flumeback") smartSettings (
+    commonSettings,
+
+    description := "A Logback appender for Flume",
+    homepage := Some(url(s"https://github.com/$repoUser/$repoProj")),
+    startYear := Some(2014),
+    licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
 
     libraryDependencies += "ch.qos.logback"           % "logback-classic"        % "1.1.2",
     libraryDependencies += "net.databinder.dispatch" %% "dispatch-core"          % "0.11.1",
