@@ -1,4 +1,3 @@
-import filters.LoggingFilter
 import org.joda.time.DateTime
 import play.Logger
 import play.api.Application
@@ -8,7 +7,7 @@ import play.api.mvc.WithFilters
 
 import scala.concurrent.duration._
 
-object Global extends WithFilters(LoggingFilter) {
+object Global extends WithFilters(playpen.HttpAccessLoggingFilter) {
   lazy implicit val actorSystem = Akka.system
   lazy implicit val execContext = actorSystem.dispatcher
 

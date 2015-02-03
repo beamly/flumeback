@@ -125,5 +125,8 @@ object Build extends Build {
     also commonSettings
     dependsOn flumeback
     also noArtifacts
+    smartSettings (
+      libraryDependencies += "com.beamly.playpen" %% "playpen" % "0.1.0"
+    )
   )
 }
