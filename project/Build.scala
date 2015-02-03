@@ -51,7 +51,7 @@ object Build extends Build {
     organization := "com.beamly.flumeback",
 
     scalaVersion := "2.11.5",
-    crossScalaVersions := Seq(scalaVersion.value, "2.10.4"),
+    crossScalaVersions := Seq(scalaVersion.value),
 
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
@@ -74,18 +74,20 @@ object Build extends Build {
     packagedArtifacts := Map()
   )
 
-  val `flumeback-proj` = project in file(".") smartSettings (
+  lazy val `flumeback-proj` = project in file(".") smartSettings (
     commonSettings,
     noArtifacts
-  )
+  ) aggregate flumeback
 
-  val flumeback = project in file("flumeback") smartSettings (
+  val flumeback = project smartSettings (
     commonSettings,
 
     description := "A Logback appender for Flume",
     homepage := Some(url(s"https://github.com/$repoUser/$repoProj")),
     startYear := Some(2014),
     licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
+
+    crossScalaVersions := Seq(scalaVersion.value, "2.10.4"),
 
     libraryDependencies += "ch.qos.logback"           % "logback-classic"        % "1.1.2",
     libraryDependencies += "net.databinder.dispatch" %% "dispatch-core"          % "0.11.1",
@@ -114,5 +116,6 @@ object Build extends Build {
     git.remoteRepo := s"git@github.com:$repoUser/$repoProj.git",
 
     watchSources ++= (baseDirectory.value * "*.sbt").get,
-    watchSources ++= (baseDirectory.value / "project" * "*.scala").get)
+    watchSources ++= (baseDirectory.value / "project" * "*.scala").get
+  )
 }
