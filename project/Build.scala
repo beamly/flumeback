@@ -54,15 +54,7 @@ object Build extends Build {
     crossScalaVersions := Seq(scalaVersion.value),
 
     scalacOptions ++= Seq("-encoding", "utf8"),
-    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
-    scalacOptions  += "-Xfatal-warnings",
-    scalacOptions  += "-Xfuture",
-    scalacOptions  += "-Yinline-warnings",
-    scalacOptions  += "-Yno-adapted-args",
-    scalacOptions  += "-Ywarn-dead-code",
-    scalacOptions  += "-Ywarn-numeric-widen",
-    scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq,
-    scalacOptions  += "-Ywarn-value-discard"
+    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
   )
 
   val noArtifacts = Seq[Setting[_]](
@@ -88,6 +80,15 @@ object Build extends Build {
     licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
 
     crossScalaVersions := Seq(scalaVersion.value, "2.10.4"),
+
+    scalacOptions  += "-Xfatal-warnings",
+    scalacOptions  += "-Xfuture",
+    scalacOptions  += "-Yinline-warnings",
+    scalacOptions  += "-Yno-adapted-args",
+    scalacOptions  += "-Ywarn-dead-code",
+    scalacOptions  += "-Ywarn-numeric-widen",
+    scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq,
+    scalacOptions  += "-Ywarn-value-discard",
 
     libraryDependencies += "ch.qos.logback"           % "logback-classic"        % "1.1.2",
     libraryDependencies += "net.databinder.dispatch" %% "dispatch-core"          % "0.11.1",
