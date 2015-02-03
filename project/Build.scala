@@ -77,7 +77,7 @@ object Build extends Build {
   lazy val `flumeback-proj` = project in file(".") smartSettings (
     commonSettings,
     noArtifacts
-  ) aggregate flumeback
+  ) aggregate (flumeback, `flumeback-scratch`)
 
   val flumeback = project smartSettings (
     commonSettings,
@@ -117,5 +117,12 @@ object Build extends Build {
 
     watchSources ++= (baseDirectory.value * "*.sbt").get,
     watchSources ++= (baseDirectory.value / "project" * "*.scala").get
+  )
+
+  val `flumeback-scratch` = (project
+    enablePlugins play.PlayScala
+    also commonSettings
+    dependsOn flumeback
+    also noArtifacts
   )
 }
