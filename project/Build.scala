@@ -21,20 +21,12 @@ object Build extends Build {
     def ifScala211Plus = Def setting (scalaPartV.value collect { case (2, y) if y >= 11 => _o })
   }
 
-  implicit final class ProjectWithAlso(val _p: Project) {
-    def also(ss: Seq[Setting[_]]) = _p settings (ss.toSeq: _*)
-
-    def smartSettings(sds: SettingsDefinition*) = _p also SmartSettings(sds: _*)
-  }
-
   implicit final class SettingKeyWithRemove[A](val _sk: SettingKey[Seq[A]]) {
     def -=[E](e: E)(implicit r: Removable[A, E]): Setting[Seq[A]] = _sk ~= r(e)
   }
   implicit final class DefinableTaskWithRemove[A](val _sk: DefinableTask[Seq[A]]) {
     def -=[E](e: E)(implicit r: Removable[A, E]): Setting[Task[Seq[A]]] = _sk ~= r(e)
   }
-
-  def SmartSettings(sds: SettingsDefinition*): Seq[Setting[_]] = sds flatMap (_.settings)
 
   sealed trait Removable[T, E] extends (E => Seq[T] => Seq[T])
   implicit def RemovableElem[T] = new Removable[T, T] {
@@ -47,7 +39,7 @@ object Build extends Build {
   val repoUser = "beamly"
   val repoProj = "flumeback"
 
-  val flumeback = project in file(".") smartSettings (
+  val flumeback = project in file(".") settings (
     organization := "com.beamly.flumeback",
     name := "flumeback",
 
