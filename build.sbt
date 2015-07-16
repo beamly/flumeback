@@ -24,6 +24,9 @@ crossScalaVersions := Seq(scalaVersion.value, "2.10.5")
 
 scalacOptions ++= Seq("-encoding", "utf8")
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
+scalacOptions  += "-language:higherKinds"
+scalacOptions  += "-language:implicitConversions"
+scalacOptions  += "-language:postfixOps"
 scalacOptions  += "-Xfatal-warnings"
 scalacOptions  += "-Xfuture"
 scalacOptions  += "-Yinline-warnings"
