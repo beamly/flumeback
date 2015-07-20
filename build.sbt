@@ -36,10 +36,10 @@ scalacOptions  += "-Ywarn-numeric-widen"
 scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq
 scalacOptions  += "-Ywarn-value-discard"
 
-libraryDependencies += "ch.qos.logback"           % "logback-classic"        % "1.1.3"
-libraryDependencies += "net.databinder.dispatch" %% "dispatch-core"          % "0.11.1"
-libraryDependencies += "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.11.1"
-libraryDependencies += "org.specs2"              %% "specs2"                 % "2.4.2"   % "test"
+libraryDependencies += "ch.qos.logback"  % "logback-classic" % "1.1.3"
+libraryDependencies += "org.json4s"     %% "json4s-core"     % "3.2.9"
+libraryDependencies += "org.json4s"     %% "json4s-native"   % "3.2.9"
+libraryDependencies += "org.specs2"     %% "specs2"          % "2.4.2"  % "test"
 
 typelevelDefaultSettings
 typelevelBuildInfoSettings
