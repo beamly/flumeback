@@ -1,9 +1,8 @@
 package flumeback
 
-import ch.qos.logback.classic.pattern.{ThrowableHandlingConverter, ThrowableProxyConverter}
+import ch.qos.logback.classic.pattern.{ ThrowableHandlingConverter, ThrowableProxyConverter }
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.{AppenderBase, CoreConstants}
-import dispatch._
+import ch.qos.logback.core.{ AppenderBase, CoreConstants }
 import org.json4s.JsonDSL._
 import org.json4s.ParserUtil
 import org.json4s.native.JsonMethods._
@@ -31,7 +30,6 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
 
   override def stop(): Unit = {
     super.stop()
-    http.shutdown()
     throwableHandlingConverter.stop()
   }
 
@@ -56,13 +54,7 @@ class FlumebackAppender extends AppenderBase[ILoggingEvent] {
         |}]
         |""".stripMargin
 
-    val req = (dispatch
-      .host(host, port)
-      .setContentType("application/json", "UTF-8")
-      << body
-    )
-
-    val resp = http(req)
+    val resp = http.post(host, port, body)
 
     resp onFailure {
       case NonFatal(e) =>

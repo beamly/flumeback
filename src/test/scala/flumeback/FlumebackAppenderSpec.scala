@@ -1,19 +1,16 @@
 package flumeback
 
 import ch.qos.logback.classic.spi.LoggingEvent
-import ch.qos.logback.classic.{Level, Logger}
-import com.ning.http.client.AsyncHandler.STATE
-import com.ning.http.client._
-import com.ning.http.client.providers.jdk.JDKFuture
-import dispatch.Http
-import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.{ Level, Logger }
 import org.json4s._
 import org.json4s.native.JsonMethods._
-import org.specs2.execute.{AsResult, Result}
+import org.slf4j.LoggerFactory
+import org.specs2.execute.{ AsResult, Result }
 import org.specs2.mutable.Specification
 import org.specs2.specification.FixtureExample
 
-import java.net.{HttpURLConnection, URL}
+import scala.concurrent.{ ExecutionContext, Future }
+import java.net.HttpURLConnection.HTTP_OK
 import java.util.concurrent.atomic.AtomicReference
 
 class FlumebackAppenderSpec extends Specification with ContextFixture {
@@ -27,7 +24,7 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
 
       flumebackAppender doAppend le
 
-      req.get().getStringData ====
+      req.get() ====
         s"""[{
           |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"$currentThreadName","source":"$loggerName"},
           |  "body" : "Hi"
@@ -44,32 +41,32 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
 
       flumebackAppender doAppend le
 
-      req.get().getStringData ====
+      req.get() ====
         s"""[{
           |  "headers" : {"timestamp":"$now","level":"INFO","threadId":"$currentThreadName","source":"$loggerName"},
           |  "body" : "{\\"a\\":\\"b\\\\c\\"}"
           |}]
           |""".stripMargin
 
-      parse(req.get().getStringData) must beLike {
+      parse(req.get()) must beLike {
         case JArray(List(JObject(List(_, ("body", JString(body)))))) => body ==== msg
       }
     }
   }
 }
 
-case class Context(flumebackAppender: FlumebackAppender, req: AtomicReference[Request]) {
+case class Context(flumebackAppender: FlumebackAppender, req: AtomicReference[String]) {
   val now = System.currentTimeMillis()
   val loggerName = s"TestClass@$now"
-  val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
+  val logger = getLogger(loggerName)
   val currentThreadName = Thread.currentThread.getName
 }
 
 trait ContextFixture extends FixtureExample[Context] {
   protected def fixture[R: AsResult](f: (Context) => R): Result = {
-    val req = new AtomicReference[Request]()
+    val req = new AtomicReference[String]()
     val flumebackAppender = new FlumebackAppender
-    flumebackAppender.http = Http(FakeAsyncHttpClient(req))
+    flumebackAppender.http = FakeHttp(req)
     flumebackAppender.start()
 
     try     AsResult(f(Context(flumebackAppender, req)))
@@ -77,24 +74,9 @@ trait ContextFixture extends FixtureExample[Context] {
   }
 }
 
-case class FakeAsyncHttpClient(ref: AtomicReference[Request]) extends AsyncHttpClient {
-  override def executeRequest[T](request: Request, handler: AsyncHandler[T]): ListenableFuture[T] = {
-    ref set request
-    new JDKFuture[T](FakeAsyncHandler(), 0, FakeHttpURLConnection())
+case class FakeHttp(ref: AtomicReference[String]) extends Http {
+  def post(host: String, port: Int, json: String)(implicit ec: ExecutionContext): Future[Int] = {
+    ref set json
+    Future successful HTTP_OK
   }
-}
-
-case class FakeAsyncHandler[T]() extends AsyncHandler[T] {
-  def onThrowable(t: Throwable) = ()
-  def onCompleted()             = null.asInstanceOf[T]
-
-  def onBodyPartReceived(bodyPart: HttpResponseBodyPart)   = STATE.CONTINUE
-  def onStatusReceived(responseStatus: HttpResponseStatus) = STATE.CONTINUE
-  def onHeadersReceived(headers: HttpResponseHeaders)      = STATE.CONTINUE
-}
-
-case class FakeHttpURLConnection() extends HttpURLConnection(new URL("http://google.com")) {
-  def connect(): Unit       = ()
-  def disconnect(): Unit    = ()
-  def usingProxy(): Boolean = false
 }
