@@ -55,3 +55,16 @@ Dependencies
 * Scala 2.11.x or 2.10.x
 * Logback 1.1.x
 * JSON4S 3.2.x
+
+## How to Release
+
+* Bump version in README
+* `sbt release`, responding to prompt as such (for example):
+    Release (relative) version: 3
+    Next release series [0.1]: [CTRL-D]
+    [info] Not bumping release series
+    Next (relative) version: 4-SNAPSHOT
+* `sbt sonatypeRelease`
+* `git push --follow-tags`
+* git checkout the tag again
+* `sbt ghpagesPushSite`
