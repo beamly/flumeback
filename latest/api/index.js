@@ -1,1 +1,1 @@
-Index.PACKAGES = {"flumeback" : [{"object" : "flumeback\/BuildInfo$.html", "name" : "flumeback.BuildInfo"}, {"class" : "flumeback\/FlumebackAppender.html", "name" : "flumeback.FlumebackAppender"}]};
+Index.PACKAGES = {"flumeback" : [{"object" : "flumeback\/BuildInfo$.html", "name" : "flumeback.BuildInfo"}, {"class" : "flumeback\/FlumebackAppender.html", "name" : "flumeback.FlumebackAppender"}, {"object" : "flumeback\/Http$.html", "trait" : "flumeback\/Http.html", "name" : "flumeback.Http"}]};
