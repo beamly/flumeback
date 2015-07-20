@@ -1,8 +1,8 @@
 package flumeback
 
-import ch.qos.logback.classic.pattern.{ThrowableHandlingConverter, ThrowableProxyConverter}
+import ch.qos.logback.classic.pattern.{ ThrowableHandlingConverter, ThrowableProxyConverter }
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.{AppenderBase, CoreConstants}
+import ch.qos.logback.core.{ AppenderBase, CoreConstants }
 import dispatch._
 import org.json4s.JsonDSL._
 import org.json4s.ParserUtil

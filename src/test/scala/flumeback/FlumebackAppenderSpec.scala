@@ -1,19 +1,19 @@
 package flumeback
 
 import ch.qos.logback.classic.spi.LoggingEvent
-import ch.qos.logback.classic.{Level, Logger}
+import ch.qos.logback.classic.{ Level, Logger }
 import com.ning.http.client.AsyncHandler.STATE
 import com.ning.http.client._
 import com.ning.http.client.providers.jdk.JDKFuture
 import dispatch.Http
-import org.slf4j.LoggerFactory
 import org.json4s._
 import org.json4s.native.JsonMethods._
-import org.specs2.execute.{AsResult, Result}
+import org.slf4j.LoggerFactory
+import org.specs2.execute.{ AsResult, Result }
 import org.specs2.mutable.Specification
 import org.specs2.specification.FixtureExample
 
-import java.net.{HttpURLConnection, URL}
+import java.net.{ HttpURLConnection, URL }
 import java.util.concurrent.atomic.AtomicReference
 
 class FlumebackAppenderSpec extends Specification with ContextFixture {
