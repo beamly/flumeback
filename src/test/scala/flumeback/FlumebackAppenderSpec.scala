@@ -61,7 +61,7 @@ class FlumebackAppenderSpec extends Specification with ContextFixture {
 case class Context(flumebackAppender: FlumebackAppender, req: AtomicReference[Request]) {
   val now = System.currentTimeMillis()
   val loggerName = s"TestClass@$now"
-  val logger = (LoggerFactory getLogger loggerName).asInstanceOf[Logger]
+  val logger = getLogger(loggerName)
   val currentThreadName = Thread.currentThread.getName
 }
 
