@@ -9,6 +9,9 @@ import sbtrelease.ReleasePlugin.ReleaseKeys._
 val repoUser = "beamly"
 val repoProj = "flumeback"
 
+val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.1.3"
+val logbackAccess  = "ch.qos.logback" % "logback-access"  % "1.1.3"
+
 val commonSettings: Seq[Setting[_]] = Settings(
   organization := "com.beamly.flumeback",
 
@@ -34,13 +37,14 @@ val commonSettings: Seq[Setting[_]] = Settings(
   scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq,
   scalacOptions  += "-Ywarn-value-discard",
 
-  libraryDependencies += "ch.qos.logback"  % "logback-classic" % "1.1.3",
-  libraryDependencies += "org.json4s"     %% "json4s-core"     % "3.2.9",
-  libraryDependencies += "org.json4s"     %% "json4s-native"   % "3.2.9",
-  libraryDependencies += "org.specs2"     %% "specs2"          % "2.4.2"  % "test",
+  libraryDependencies += logbackClassic,
+  libraryDependencies += "org.json4s" %% "json4s-core"   % "3.2.9",
+  libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.9",
+  libraryDependencies += "org.specs2" %% "specs2"        % "2.4.2"  % "test",
 
   typelevelDefaultSettings,
   typelevelBuildInfoSettings,
+  buildInfoPackage := name.value.map(ch => if (ch == '-') '.' else ch),
 
   crossBuild := true,
 
@@ -61,9 +65,25 @@ val commonSettings: Seq[Setting[_]] = Settings(
   git.remoteRepo := s"git@github.com:$repoUser/$repoProj.git"
 )
 
-val flumeback = project in file(".") settings (commonSettings: _*)
+lazy val flumebackRoot = (project in file(".") settings (commonSettings: _*) settings (noArtifacts: _*)
+  dependsOn (`flumeback-core`, flumeback, `flumeback-access`)
+  aggregate (`flumeback-core`, flumeback, `flumeback-access`)
+)
+
+val `flumeback-core` = project settings (commonSettings: _*)
+
+val flumeback = project dependsOn `flumeback-core` settings (commonSettings: _*)
+
+val `flumeback-access` = project dependsOn `flumeback-core` settings (commonSettings: _*) settings(
+  libraryDependencies += logbackAccess,
+  libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
+)
 
 def Settings(settings: SettingsDefinition*): Seq[Setting[_]] = settings.flatMap(_.settings)
+
+val noPackage = Settings(Keys.`package` := file(""), packageBin := file(""), packagedArtifacts := Map())
+val noPublish = Settings(publish := {}, publishLocal := {}, publishArtifact := false)
+val noArtifacts = Settings(noPackage, noPublish)
 
 watchSources ++= (baseDirectory.value * "*.sbt").get
 watchSources ++= (baseDirectory.value / "project" * "*.scala").get
