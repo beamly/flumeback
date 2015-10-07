@@ -1,6 +1,6 @@
 # Flumeback
 
-[![Latest Version](https://maven-badges.herokuapp.com/maven-central/com.beamly.flumeback/flumeback_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.beamly.flumeback/flumeback_2.11)
+[![Latest Version](https://maven-badges.herokuapp.com/maven-central/com.beamly.flumeback/flumeback_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.beamly.flumeback/flumeback2.11)
 [![License](http://img.shields.io/:license-Apache%202-red.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt) 
 [![Scaladoc](http://img.shields.io/:docs-Scaladoc-orange.svg)](http://beamly.github.io/flumeback/latest/api)
 
@@ -18,7 +18,7 @@ Developed to configure our Play apps to log to our Flume setup.
 
 For _sbt_:
 
-```"com.beamly.flumeback" %% "flumeback" % "0.2.1"```
+```"com.beamly.flumeback" %% "flumeback" % "0.4.0"```
 
 For _maven_:
 
@@ -26,7 +26,7 @@ For _maven_:
 <dependency>
   <groupId>com.beamly.flumeback</groupId>
   <artifactId>flumeback_${scala.binary}</artifactId>
-  <version>0.2.1</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 (where `scala.binary` is defined somewhere as `2.11` or `2.10`)
