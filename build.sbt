@@ -1,83 +1,90 @@
-import sbt.Path.userHome
-import SbtKitPre._
+import SbtMisc._
 
-import SonatypeKeys._
-import TypelevelKeys._
-import org.typelevel.sbt.Developer
-import sbtrelease.ReleasePlugin.ReleaseKeys._
+lazy val commonSetup: Project => Project = (_
+  enablePlugins BuildInfoPlugin
+  settings (
+    organization := "com.beamly.flumeback",
+        licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
+     description := "A Logback appender for Flume",
+        homepage := Some(url(s"https://github.com/beamly/flumeback")),
+       startYear := Some(2014),
 
-val repoUser = "beamly"
-val repoProj = "flumeback"
+    scalaVersion := "2.11.7",
+    crossScalaVersions := Seq(scalaVersion.value, "2.10.6"),
 
-val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.1.3"
-val logbackAccess  = "ch.qos.logback" % "logback-access"  % "1.1.3"
+    scalacOptions ++= Seq("-encoding", "utf8"),
+    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
+    scalacOptions  += "-language:higherKinds",
+    scalacOptions  += "-language:implicitConversions",
+    scalacOptions  += "-language:postfixOps",
+    scalacOptions  += "-Xfatal-warnings",
+    scalacOptions  += "-Xfuture",
+    scalacOptions  += "-Yno-adapted-args",
+    scalacOptions  += "-Ywarn-dead-code",
+    scalacOptions  += "-Ywarn-numeric-widen",
+    scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq,
+    scalacOptions  += "-Ywarn-value-discard",
 
-val commonSettings: Seq[Setting[_]] = Settings(
-  organization := "com.beamly.flumeback",
+    scalacOptions in (Compile, console) -= "-Ywarn-unused-import",
+    scalacOptions in (Test,    console) -= "-Ywarn-unused-import",
 
-  description := "A Logback appender for Flume",
-  homepage := Some(url(s"https://github.com/$repoUser/$repoProj")),
-  startYear := Some(2014),
-  licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
+    maxErrors := 5,
+    triggeredMessage := Watched.clearWhenTriggered,
 
-  scalaVersion := "2.11.7",
-  crossScalaVersions := Seq(scalaVersion.value, "2.10.5"),
+    libraryDependencies += "ch.qos.logback"  % "logback-classic" % logbackVersion.value,
+    libraryDependencies += "org.json4s"     %% "json4s-core"     % "3.2.9",
+    libraryDependencies += "org.json4s"     %% "json4s-native"   % "3.2.9",
+    libraryDependencies += "org.specs2"     %% "specs2"          % "2.4.2" % "test",
 
-  scalacOptions ++= Seq("-encoding", "utf8"),
-  scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
-  scalacOptions  += "-language:higherKinds",
-  scalacOptions  += "-language:implicitConversions",
-  scalacOptions  += "-language:postfixOps",
-  scalacOptions  += "-Xfatal-warnings",
-  scalacOptions  += "-Xfuture",
-  scalacOptions  += "-Yinline-warnings",
-  scalacOptions  += "-Yno-adapted-args",
-  scalacOptions  += "-Ywarn-dead-code",
-  scalacOptions  += "-Ywarn-numeric-widen",
-  scalacOptions ++= "-Ywarn-unused-import".ifScala211Plus.value.toSeq,
-  scalacOptions  += "-Ywarn-value-discard",
+    buildInfoOptions += BuildInfoOption.BuildTime,
+    buildInfoPackage := name.value.map(ch => if (ch == '-') '.' else ch),
+    buildInfoUsePackageAsPath := true,
 
-  libraryDependencies += logbackClassic,
-  libraryDependencies += "org.json4s" %% "json4s-core"   % "3.2.9",
-  libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.9",
-  libraryDependencies += "org.specs2" %% "specs2"        % "2.4.2"  % "test",
+    parallelExecution in Test := true,
+    fork in Test := false,
 
-  typelevelDefaultSettings,
-  typelevelBuildInfoSettings,
-  buildInfoPackage := name.value.map(ch => if (ch == '-') '.' else ch),
+    bintrayOrganization := Some("beamly"),
 
-  crossBuild := true,
+    pomExtra := pomExtra.value ++ {
+        <developers>
+            <developer>
+                <id>dwijnand</id>
+                <name>Dale Wijnand</name>
+                <email>dale wijnand gmail com</email>
+                <url>dwijnand.com</url>
+            </developer>
+            <developer>
+                <id>lotia</id>
+                <name>Ali Asad Lotia</name>
+            </developer>
+        </developers>
+        <scm>
+            <connection>scm:git:github.com/beamly/flumeback.git</connection>
+            <developerConnection>scm:git:git@github.com:beamly/flumeback.git</developerConnection>
+            <url>https://github.com/beamly/flumeback</url>
+        </scm>
+    },
 
-  pgpPublicRing := userHome / ".gnupg" / "beamly-pubring.gpg",
-  pgpSecretRing := userHome / ".gnupg" / "beamly-secring.gpg",
-
-  profileName := "com.beamly",
-
-  githubProject := (repoUser, repoProj),
-  githubDevs := Seq(Developer("Dale Wijnand", "dwijnand"), Developer("Ali Asad Lotia", "lotia")),
-  apiURL := Some(url(s"http://$repoUser.github.io/$repoProj/latest/api/")),
-  autoAPIMappings := true,
-
-  site.settings,
-  site.includeScaladoc(),
-
-  ghpages.settings,
-  git.remoteRepo := s"git@github.com:$repoUser/$repoProj.git"
+    releaseCrossBuild := true
+  )
 )
 
-lazy val flumebackRoot = (project in file(".") settings (commonSettings: _*) settings (noArtifacts: _*)
+lazy val flumebackRoot = (project in file(".") configure commonSetup settings noArtifacts
   dependsOn (`flumeback-core`, flumeback, `flumeback-access`)
   aggregate (`flumeback-core`, flumeback, `flumeback-access`)
 )
 
-val `flumeback-core` = project settings (commonSettings: _*)
+lazy val `flumeback-core` = project configure commonSetup
 
-val flumeback = project dependsOn `flumeback-core` settings (commonSettings: _*)
+lazy val flumeback = project dependsOn `flumeback-core` configure commonSetup
 
-val `flumeback-access` = project dependsOn `flumeback-core` settings (commonSettings: _*) settings(
-  libraryDependencies += logbackAccess,
-  libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
+lazy val `flumeback-access` = project dependsOn `flumeback-core` configure commonSetup settings(
+  libraryDependencies += "ch.qos.logback" % "logback-access"    % logbackVersion.value,
+  libraryDependencies += "javax.servlet"  % "javax.servlet-api" % "3.1.0" % "provided"
 )
+
+val logbackVersion = settingKey[String]("")
+logbackVersion in ThisBuild := "1.1.3"
 
 def Settings(settings: SettingsDefinition*): Seq[Setting[_]] = settings.flatMap(_.settings)
 
